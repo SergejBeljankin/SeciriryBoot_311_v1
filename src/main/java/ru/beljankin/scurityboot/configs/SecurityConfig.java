@@ -12,6 +12,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/authenticated/**").authenticated()
                 .and()
                 .formLogin()
+//                .loginProcessingUrl("/hello_login") // можно указать по какому адресу будет обрабатываться пароль
                 .and()
                 .logout().logoutSuccessUrl("/");
     }

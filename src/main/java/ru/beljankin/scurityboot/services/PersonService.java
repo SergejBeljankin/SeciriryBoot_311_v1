@@ -7,35 +7,36 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.beljankin.scurityboot.entities.Person;
 import ru.beljankin.scurityboot.entities.Role;
-import ru.beljankin.scurityboot.entities.User;
-import ru.beljankin.scurityboot.repostories.UserRepository;
+import ru.beljankin.scurityboot.repostories.PersonRepository;
+
 
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService {
-    private UserRepository userRepository;
+public class PersonService implements UserDetailsService {
+    private PersonRepository personRepository;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository){
-        this.userRepository = userRepository;
+    public void setUserRepository(PersonRepository personRepository){
+        this.personRepository = personRepository;
     }
 
-    public User findByUsername(String username){
-        return userRepository.findByUsername(username);
+    public Person findByUsername(String username){
+        return personRepository.findByUsername(username);
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username);
-        if(user == null){
+        Person person = findByUsername(username);
+        if(person == null){
             throw new UsernameNotFoundException(String.format("User '%s' not found", username));
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+        return new org.springframework.security.core.userdetails.User(person.getUsername(), person.getPassword(), mapRolesToAuthorities(person.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
